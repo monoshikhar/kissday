@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Kiss Day 💋</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0d0010;
+      --bg2:       #1a0020;
+      --magenta:   #ff0080;
+      --pink:      #ff4fa3;
+      --soft-pink: #ffb3d9;
+      --gold:      #ffd700;
+      --white:     #fff;
+      --glass:     rgba(255,255,255,0.06);
+      --glow:      rgba(255,0,128,0.5);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── starfield ── */
+    #starfield {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+
+    /* ── bg gradient ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(120,0,80,0.45) 0%, transparent 55%),
+        radial-gradient(ellipse at 70% 80%, rgba(80,0,100,0.4)  0%, transparent 55%),
+        linear-gradient(180deg, #0d0010 0%, #1a0020 100%);
+      pointer-events: none;
+    }
+
+    /* ══════════════════════
+       SCREENS
+    ══════════════════════ */
+    .screen {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px;
+      transition: opacity .5s ease;
+    }
+    .screen.hidden { opacity: 0; pointer-events: none; }
+
+    /* ── INTRO ── */
+    #introScreen { text-align: center; }
+
+    .eyebrow {
+      font-family: 'Lato', sans-serif;
+      font-size: .8rem; letter-spacing: 5px;
+      text-transform: uppercase; color: var(--soft-pink);
+      margin-bottom: 14px;
+      animation: fadeIn 1s ease both;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--magenta), var(--soft-pink), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1; margin-bottom: 6px;
+      animation: fadeIn 1s .2s ease both;
+      filter: drop-shadow(0 0 30px rgba(255,0,128,.5));
+    }
+
+    .big-kiss {
+      font-size: 5rem; display: block;
+      margin: 20px auto;
+      animation: floatKiss 2s ease-in-out infinite, fadeIn 1s .4s ease both;
+      filter: drop-shadow(0 0 20px var(--glow));
+    }
+    @keyframes floatKiss {
+      0%,100%{ transform: translateY(0) rotate(-5deg) scale(1); }
+      50%    { transform: translateY(-14px) rotate(5deg) scale(1.08); }
+    }
+
+    .intro-text {
+      font-size: 1.1rem; color: var(--soft-pink);
+      line-height: 1.8; margin-bottom: 30px; max-width: 400px;
+      animation: fadeIn 1s .6s ease both; font-weight: 300;
+    }
+
+    .date-line {
+      font-family: 'Cinzel', serif;
+      font-size: .85rem; letter-spacing: 4px;
+      color: rgba(255,179,217,.5); margin-bottom: 36px;
+      animation: fadeIn 1s .7s ease both;
+    }
+
+    /* how-to */
+    .howto {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      justify-content: center; margin-bottom: 36px;
+      animation: fadeIn 1s .8s ease both;
+    }
+    .howto-item {
+      background: var(--glass);
+      border: 1px solid rgba(255,0,128,.25);
+      border-radius: 16px; padding: 16px 20px;
+      text-align: center; max-width: 130px;
+      backdrop-filter: blur(8px);
+    }
+    .howto-icon  { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+    .howto-label { font-size: .82rem; color: var(--soft-pink); line-height: 1.4; }
+
+    /* ── START BUTTON ── */
+    .start-btn {
+      background: linear-gradient(135deg, var(--magenta), #c0006a);
+      color: white; border: none; border-radius: 50px;
+      font-family: 'Cinzel', serif; font-size: 1.2rem;
+      padding: 16px 52px; cursor: pointer; letter-spacing: 2px;
+      box-shadow: 0 0 30px var(--glow), 0 6px 24px rgba(0,0,0,.4);
+      transition: all .25s;
+      animation: fadeIn 1s 1s ease both, pulse 2s 2s ease-in-out infinite;
+    }
+    .start-btn:hover { transform: scale(1.06); box-shadow: 0 0 50px var(--glow); }
+
+    @keyframes pulse {
+      0%,100%{ box-shadow: 0 0 30px var(--glow), 0 6px 24px rgba(0,0,0,.4); }
+      50%    { box-shadow: 0 0 55px var(--glow), 0 6px 24px rgba(0,0,0,.4); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform: translateY(16px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════
+       GAME HUD
+    ══════════════════════ */
+    #gameHUD {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 20; padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(180deg, rgba(13,0,16,.9) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hud-box {
+      background: var(--glass);
+      border: 1px solid rgba(255,0,128,.3);
+      border-radius: 14px; padding: 10px 20px;
+      backdrop-filter: blur(10px); text-align: center;
+      min-width: 90px;
+    }
+    .hud-label { font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--soft-pink); margin-bottom: 2px; }
+    .hud-val   { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--white); font-weight:700; }
+
+    /* progress bar */
+    .progress-outer {
+      flex: 1; margin: 0 16px;
+      background: rgba(255,255,255,.1);
+      border-radius: 50px; height: 10px; overflow: hidden;
+    }
+    .progress-inner {
+      height: 100%; border-radius: 50px;
+      background: linear-gradient(90deg, var(--magenta), var(--soft-pink));
+      width: 0%; transition: width .3s ease;
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ══════════════════════
+       CANVAS
+    ══════════════════════ */
+    #gameCanvas {
+      position: fixed; inset: 0; z-index: 11;
+      touch-action: none;
+      pointer-events: none;
+    }
+    #gameCanvas.active {
+      pointer-events: all;
+    }
+
+    /* ══════════════════════
+       MESSAGE POPUP
+    ══════════════════════ */
+    #msgPopup {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(0);
+      z-index: 30;
+      background: rgba(20,0,30,.95);
+      border: 2px solid var(--magenta);
+      border-radius: 24px; padding: 30px 36px;
+      text-align: center; max-width: 340px; width: 90%;
+      box-shadow: 0 0 50px var(--glow);
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+    }
+    #msgPopup.show {
+      transform: translate(-50%,-50%) scale(1);
+      pointer-events: all;
+    }
+    .msg-emoji  { font-size: 3rem; display:block; margin-bottom:10px; }
+    .msg-milestone { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:3px; color:var(--magenta); margin-bottom:8px; text-transform:uppercase; }
+    .msg-text   { font-family:'Great Vibes',cursive; font-size:1.8rem; color:var(--white); line-height:1.4; margin-bottom:6px; }
+    .msg-sub    { font-size:.9rem; color:var(--soft-pink); font-weight:300; line-height:1.6; }
+    .msg-close  {
+      margin-top:18px; background:var(--magenta); color:white;
+      border:none; border-radius:50px; padding:9px 28px;
+      font-family:'Cinzel',serif; font-size:.85rem; letter-spacing:1px;
+      cursor:pointer; transition:all .2s;
+    }
+    .msg-close:hover { background:var(--pink); transform:scale(1.05); }
+
+    /* ══════════════════════
+       WIN SCREEN
+    ══════════════════════ */
+    #winScreen { text-align:center; }
+
+    .win-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem,10vw,5.5rem);
+      background: linear-gradient(135deg, var(--gold), var(--magenta), var(--soft-pink));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 20px rgba(255,215,0,.4));
+      animation: fadeIn .7s ease both;
+    }
+
+    .win-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem; letter-spacing: 3px;
+      color: var(--soft-pink); margin-bottom: 30px;
+      animation: fadeIn .7s .2s ease both;
+    }
+
+    .win-kisses { font-size:3rem; margin-bottom:24px; animation: fadeIn .7s .3s ease both; }
+
+    .win-card {
+      background: var(--glass);
+      border: 1px solid rgba(255,0,128,.4);
+      border-radius: 24px; padding: 30px 28px;
+      max-width: 420px; width:100%;
+      backdrop-filter: blur(12px);
+      margin-bottom: 28px;
+      animation: fadeIn .7s .4s ease both;
+      box-shadow: 0 0 40px rgba(255,0,128,.15);
+    }
+
+    .win-message {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem; color: var(--white);
+      line-height: 1.6; margin-bottom:14px;
+    }
+
+    .win-note {
+      font-size: 1rem; color: var(--soft-pink);
+      line-height: 1.8; font-weight:300;
+    }
+
+    .score-row {
+      display:flex; gap:14px; justify-content:center;
+      flex-wrap:wrap; margin-bottom:28px;
+      animation: fadeIn .7s .5s ease both;
+    }
+    .score-chip {
+      background:var(--glass); border:1px solid rgba(255,0,128,.3);
+      border-radius:50px; padding:8px 20px;
+      font-family:'Cinzel',serif; font-size:.85rem;
+      color:var(--soft-pink); letter-spacing:1px;
+    }
+    .score-chip strong { color:var(--white); }
+
+    .play-again {
+      background:transparent; border:2px solid var(--magenta);
+      color:var(--magenta); border-radius:50px;
+      font-family:'Cinzel',serif; font-size:1rem;
+      padding:12px 36px; cursor:pointer; letter-spacing:2px;
+      transition:all .25s;
+      animation: fadeIn .7s .7s ease both;
+    }
+    .play-again:hover { background:var(--magenta); color:white; transform:scale(1.05); box-shadow:0 0 30px var(--glow); }
+
+    /* ── game over screen ── */
+    #gameOverScreen { text-align:center; }
+    .over-title {
+      font-family:'Cinzel',serif;
+      font-size:clamp(2rem,8vw,4rem); font-weight:900;
+      color:var(--soft-pink); margin-bottom:12px;
+      animation:fadeIn .7s ease both;
+    }
+    .over-sub {
+      font-size:1.1rem; color:rgba(255,179,217,.7);
+      margin-bottom:28px; font-weight:300;
+      animation:fadeIn .7s .2s ease both;
+    }
+    .over-score {
+      font-family:'Cinzel',serif; font-size:3rem;
+      color:var(--magenta); margin-bottom:28px;
+      animation:fadeIn .7s .3s ease both;
+    }
+    .over-btns { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; animation:fadeIn .7s .4s ease both; }
+    .retry-btn {
+      background:var(--magenta); color:white; border:none;
+      border-radius:50px; font-family:'Cinzel',serif; font-size:1rem;
+      padding:13px 36px; cursor:pointer; letter-spacing:1px;
+      transition:all .25s;
+    }
+    .retry-btn:hover { transform:scale(1.05); box-shadow:0 0 30px var(--glow); }
+  </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<canvas id="gameCanvas"></canvas>
+
+<!-- HUD (hidden until game starts) -->
+<div id="gameHUD" style="display:none;">
+  <div class="hud-box">
+    <div class="hud-label">Caught</div>
+    <div class="hud-val" id="hudScore">0</div>
+  </div>
+  <div class="progress-outer">
+    <div class="progress-inner" id="hudProgress"></div>
+  </div>
+  <div class="hud-box">
+    <div class="hud-label">Lives</div>
+    <div class="hud-val" id="hudLives">💋💋💋</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="screen" id="introScreen">
+  <div class="eyebrow">Valentine's Week · February 13, 2026</div>
+  <h1>Kiss Day</h1>
+  <span class="big-kiss">💋</span>
+  <p class="intro-text">Catch every kiss before it slips away — each one hides a sweet little secret 🤫</p>
+  <div class="howto">
+    <div class="howto-item">
+      <span class="howto-icon">👆</span>
+      <div class="howto-label">Move / tap to catch falling kisses</div>
+    </div>
+    <div class="howto-item">
+      <span class="howto-icon">💋</span>
+      <div class="howto-label">Each kiss unlocks a sweet message</div>
+    </div>
+    <div class="howto-item">
+      <span class="howto-icon">❌</span>
+      <div class="howto-label">Miss 3 and the game ends!</div>
+    </div>
+  </div>
+  <div class="date-line">CATCH 20 KISSES TO WIN</div>
+  <button class="start-btn" onclick="startGame()">Catch My Kisses 💋</button>
+</div>
+
+<!-- MESSAGE POPUP -->
+<div id="msgPopup">
+  <span class="msg-emoji" id="msgEmoji">💋</span>
+  <div class="msg-milestone" id="msgMilestone">5 Kisses!</div>
+  <div class="msg-text" id="msgText">You caught my heart...</div>
+  <div class="msg-sub" id="msgSub"></div>
+  <button class="msg-close" onclick="closeMsg()">Keep catching 💋</button>
+</div>
+
+<!-- WIN SCREEN -->
+<div class="screen hidden" id="winScreen">
+  <div class="win-title">You caught them all! 💋</div>
+  <div class="win-sub">KISS DAY · MISSION COMPLETE</div>
+  <div class="win-kisses">💋✨💋✨💋</div>
+  <div class="win-card">
+    <div class="win-message" id="winMessage">Every kiss is a promise...</div>
+    <div class="win-note" id="winNote"></div>
+  </div>
+  <div class="score-row">
+    <div class="score-chip">Caught: <strong id="winCaught">0</strong> 💋</div>
+    <div class="score-chip">Missed: <strong id="winMissed">0</strong> ❌</div>
+  </div>
+  <button class="play-again" onclick="resetGame()">Play Again 💋</button>
+</div>
+
+<!-- GAME OVER -->
+<div class="screen hidden" id="gameOverScreen">
+  <div class="over-title">Aww, they slipped away! 💔</div>
+  <div class="over-sub">But don't worry — every kiss is still yours 💋</div>
+  <div class="over-score" id="overScore">0 kisses caught</div>
+  <div class="over-btns">
+    <button class="retry-btn" onclick="resetGame()">Try Again 💋</button>
+  </div>
+</div>
+
+<script>
+  // ── STARS ──
+  const starC  = document.getElementById('starfield');
+  const starCx = starC.getContext('2d');
+  function resizeStars(){ starC.width=innerWidth; starC.height=innerHeight; drawStars(); }
+  function drawStars(){
+    starCx.clearRect(0,0,starC.width,starC.height);
+    for(let i=0;i<180;i++){
+      const x=Math.random()*starC.width, y=Math.random()*starC.height;
+      const r=Math.random()*1.3;
+      starCx.beginPath(); starCx.arc(x,y,r,0,Math.PI*2);
+      starCx.fillStyle=`rgba(255,${150+Math.random()*105},${200+Math.random()*55},${.3+Math.random()*.7})`;
+      starCx.fill();
+    }
+  }
+  window.addEventListener('resize',()=>{ resizeStars(); resizeCanvas(); });
+  resizeStars();
+
+  // ── GAME CANVAS ──
+  const canvas = document.getElementById('gameCanvas');
+  const cx     = canvas.getContext('2d');
+  function resizeCanvas(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+  resizeCanvas();
+
+  // ── GAME STATE ──
+  const TARGET   = 20;
+  const MAX_MISS = 3;
+  let score=0, missed=0, lives=MAX_MISS;
+  let gameRunning=false, gamePaused=false;
+  let catcherX=0, catcherY=0;
+  let kisses=[], particles=[], floaties=[];
+  let spawnTimer=0, spawnRate=90;
+  let frameCount=0;
+
+  // milestone messages
+  const milestones = {
+    5:  { emoji:'😘', title:'5 Kisses!',  text:'You make my heart skip a beat',  sub:'Every kiss caught brings us closer 💕' },
+    10: { emoji:'💋', title:'10 Kisses!', text:'Halfway there, my love',          sub:'These lips were made for you and only you 💋' },
+    15: { emoji:'💝', title:'15 Kisses!', text:'You\'re unstoppable!',            sub:'Just like my love for you — it never stops 🔥' },
+  };
+
+  const kissTypes = [
+    { emoji:'💋', size:32, speed:1.8,  points:1,  color:'#ff0080' },
+    { emoji:'😘', size:28, speed:2.4,  points:1,  color:'#ff4fa3' },
+    { emoji:'💕', size:24, speed:2.8,  points:1,  color:'#ffb3d9' },
+    { emoji:'❤️', size:26, speed:2.0,  points:1,  color:'#ff3366' },
+    { emoji:'🌹', size:26, speed:1.6,  points:1,  color:'#cc0055' },
+  ];
+
+  function hide(id){ document.getElementById(id).classList.add('hidden'); }
+  function show(id){ document.getElementById(id).classList.remove('hidden'); }
+
+  // ── CATCHER: mouse + touch ──
+  canvas.addEventListener('mousemove', e => {
+    catcherX = e.clientX;
+    catcherY = e.clientY;
+  });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    catcherX = e.touches[0].clientX;
+    catcherY = e.touches[0].clientY;
+  }, { passive:false });
+  canvas.addEventListener('touchstart', e => {
+    catcherX = e.touches[0].clientX;
+    catcherY = e.touches[0].clientY;
+  });
+
+  // init catcher center
+  catcherX = innerWidth/2;
+  catcherY = innerHeight - 80;
+
+  // ── SPAWN ──
+  function spawnKiss(){
+    const t = kissTypes[Math.floor(Math.random()*kissTypes.length)];
+    kisses.push({
+      x: 40 + Math.random()*(canvas.width-80),
+      y: -40,
+      vy: t.speed + Math.random()*1.5 + (score/TARGET)*1.2,
+      vx: (Math.random()-.5)*1.5,
+      emoji: t.emoji,
+      size: t.size,
+      opacity: 1,
+      wobble: Math.random()*Math.PI*2,
+      wobbleSpeed: .05+Math.random()*.05,
+      glowColor: t.color,
+    });
+  }
+
+  // ── PARTICLES ──
+  function spawnParticles(x,y,color){
+    for(let i=0;i<12;i++){
+      const angle = Math.random()*Math.PI*2;
+      const speed = 2+Math.random()*5;
+      particles.push({
+        x,y,
+        vx: Math.cos(angle)*speed,
+        vy: Math.sin(angle)*speed - 2,
+        life: 1, decay: .04+Math.random()*.04,
+        size: 4+Math.random()*8,
+        emoji: ['💋','✨','💕','❤️'][Math.floor(Math.random()*4)],
+      });
+    }
+  }
+
+  // ── DRAW ──
+  function drawCatcher(){
+    const R = 36;
+    cx.save();
+    // glow ring
+    const grd = cx.createRadialGradient(catcherX,catcherY,R*.4,catcherX,catcherY,R*1.5);
+    grd.addColorStop(0,'rgba(255,0,128,.35)');
+    grd.addColorStop(1,'rgba(255,0,128,0)');
+    cx.beginPath(); cx.arc(catcherX,catcherY,R*1.5,0,Math.PI*2);
+    cx.fillStyle=grd; cx.fill();
+    // ring
+    cx.beginPath(); cx.arc(catcherX,catcherY,R,0,Math.PI*2);
+    cx.strokeStyle='rgba(255,0,128,.8)'; cx.lineWidth=3; cx.stroke();
+    // inner pulse
+    cx.beginPath(); cx.arc(catcherX,catcherY,R*.55,0,Math.PI*2);
+    cx.fillStyle='rgba(255,0,128,.2)'; cx.fill();
+    // emoji
+    cx.font = `${R*.9}px serif`;
+    cx.textAlign='center'; cx.textBaseline='middle';
+    cx.fillText('💋',catcherX,catcherY);
+    cx.restore();
+  }
+
+  function drawKiss(k){
+    k.wobble += k.wobbleSpeed;
+    cx.save();
+    cx.globalAlpha = k.opacity;
+    // glow
+    cx.shadowColor = k.glowColor;
+    cx.shadowBlur  = 18;
+    cx.font = `${k.size*2}px serif`;
+    cx.textAlign='center'; cx.textBaseline='middle';
+    cx.translate(k.x + Math.sin(k.wobble)*6, k.y);
+    cx.fillText(k.emoji,0,0);
+    cx.restore();
+  }
+
+  function drawParticles(){
+    particles.forEach(p=>{
+      cx.save();
+      cx.globalAlpha = p.life;
+      cx.font = `${p.size}px serif`;
+      cx.textAlign='center'; cx.textBaseline='middle';
+      cx.fillText(p.emoji, p.x, p.y);
+      cx.restore();
+    });
+  }
+
+  // missed flash
+  let missFlash = 0;
+  function drawMissFlash(){
+    if(missFlash > 0){
+      cx.save();
+      cx.globalAlpha = missFlash * .25;
+      cx.fillStyle = '#ff0040';
+      cx.fillRect(0,0,canvas.width,canvas.height);
+      cx.restore();
+      missFlash -= .08;
+    }
+  }
+
+  // ── UPDATE ──
+  function update(){
+    spawnTimer++;
+    if(spawnTimer >= spawnRate){
+      spawnKiss();
+      spawnTimer=0;
+      spawnRate = Math.max(35, 90 - score*3);
+    }
+
+    const CR = 36;
+
+    kisses = kisses.filter(k=>{
+      k.y  += k.vy;
+      k.x  += k.vx;
+      // bounce walls
+      if(k.x < 20 || k.x > canvas.width-20) k.vx *= -1;
+
+      // catch check
+      const dx=k.x-catcherX, dy=k.y-catcherY;
+      if(Math.sqrt(dx*dx+dy*dy) < CR+k.size){
+        spawnParticles(k.x,k.y,k.glowColor);
+        score++;
+        document.getElementById('hudScore').textContent = score;
+        document.getElementById('hudProgress').style.width = (score/TARGET*100)+'%';
+        // milestone?
+        if(milestones[score]) showMilestone(milestones[score]);
+        if(score >= TARGET){ endGame('win'); return false; }
+        return false;
+      }
+
+      // missed
+      if(k.y > canvas.height+40){
+        missed++;
+        lives--;
+        missFlash = 1;
+        updateLives();
+        if(lives <= 0){ endGame('over'); return false; }
+        return false;
+      }
+      return true;
+    });
+
+    // particles
+    particles = particles.filter(p=>{
+      p.x += p.vx; p.y += p.vy;
+      p.vy += .15; p.life -= p.decay;
+      return p.life > 0;
+    });
+  }
+
+  function updateLives(){
+    const arr = [];
+    for(let i=0;i<lives;i++) arr.push('💋');
+    document.getElementById('hudLives').textContent = arr.join('') || '💔';
+  }
+
+  // ── LOOP ──
+  function loop(){
+    if(!gameRunning) return;
+    cx.clearRect(0,0,canvas.width,canvas.height);
+    if(!gamePaused){
+      update();
+      drawMissFlash();
+      kisses.forEach(drawKiss);
+      drawParticles();
+      drawCatcher();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // ── MILESTONE POPUP ──
+  function showMilestone(m){
+    gamePaused = true;
+    document.getElementById('msgEmoji').textContent      = m.emoji;
+    document.getElementById('msgMilestone').textContent  = m.title;
+    document.getElementById('msgText').textContent       = m.text;
+    document.getElementById('msgSub').textContent        = m.sub;
+    document.getElementById('msgPopup').classList.add('show');
+  }
+  function closeMsg(){
+    document.getElementById('msgPopup').classList.remove('show');
+    gamePaused = false;
+  }
+
+  // ── END ──
+  function endGame(type){
+    gameRunning = false;
+    document.getElementById('gameHUD').style.display='none';
+    setTimeout(()=>{
+      if(type==='win'){
+        document.getElementById('winCaught').textContent = score;
+        document.getElementById('winMissed').textContent = missed;
+        document.getElementById('winMessage').textContent = 'Every kiss was meant for you';
+        document.getElementById('winNote').textContent =
+          `You caught ${score} kisses and kept only ${missed} from slipping away. `+
+          `Just like how you hold on to every moment we share — with care, with warmth, and with so much love. `+
+          `Happy Kiss Day! 💋✨`;
+        hide('introScreen'); hide('gameOverScreen');
+        show('winScreen');
+        confettiBurst();
+      } else {
+        document.getElementById('overScore').textContent = score+' kiss'+(score!==1?'es':'') + ' caught';
+        hide('introScreen'); hide('winScreen');
+        show('gameOverScreen');
+      }
+    }, 400);
+  }
+
+  // ── CONFETTI on win ──
+  function confettiBurst(){
+    const emj = ['💋','✨','💕','❤️','🌹','💝','😘'];
+    for(let i=0;i<30;i++){
+      const el=document.createElement('div');
+      el.style.cssText=`
+        position:fixed; font-size:${1.5+Math.random()*1.5}rem;
+        left:${Math.random()*100}vw; top:-30px; z-index:999;
+        pointer-events:none; opacity:0;
+        animation:confettiFall ${2+Math.random()*2}s ease forwards;
+        animation-delay:${Math.random()*1}s;
+      `;
+      el.textContent=emj[Math.floor(Math.random()*emj.length)];
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),4000);
+    }
+  }
+  const sty=document.createElement('style');
+  sty.textContent=`
+    @keyframes confettiFall{
+      0%  {opacity:0; transform:translateY(0) rotate(0deg);}
+      10% {opacity:1;}
+      90% {opacity:.8;}
+      100%{opacity:0; transform:translateY(105vh) rotate(${360+Math.random()*360}deg);}
+    }`;
+  document.head.appendChild(sty);
+
+  // ── START / RESET ──
+  function startGame(){
+    hide('introScreen');
+    document.getElementById('gameHUD').style.display='flex';
+    canvas.classList.add('active');
+    score=0; missed=0; lives=MAX_MISS;
+    kisses=[]; particles=[];
+    spawnTimer=0; spawnRate=90;
+    gameRunning=true; gamePaused=false;
+    document.getElementById('hudScore').textContent='0';
+    document.getElementById('hudProgress').style.width='0%';
+    updateLives();
+    loop();
+  }
+
+  function resetGame(){
+    cx.clearRect(0,0,canvas.width,canvas.height);
+    canvas.classList.remove('active');
+    hide('winScreen'); hide('gameOverScreen');
+    document.getElementById('gameHUD').style.display='none';
+    show('introScreen');
+  }
+</script>
+</body>
+</html>
